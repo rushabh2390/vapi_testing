@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Talk to Rica</title>
+</head>
+<body>
+  <h2>🎤 Talk to Rica (Web Call)</h2>
+  
+  <label>Name: <input type="text" id="name" value="Johna Doe"></label><br><br>
+  <label>SR No: <input type="text" id="sr_no" value="1"></label><br><br>
+  <label>Project: <input type="text" id="project" value="A"></label><br><br>
+  <label>Services: <input type="text" id="services" value="SEO, PPC"></label><br><br>
+
+  <button id="start-call" disabled>🎤 Start Web Call</button>
+  <button id="end-call" disabled>End Call</button>
+  <p id="status">Loading SDK...</p>
+
+  <script src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js"></script>
+  
+  <script>
+    let vapi;
+
+    // Wait for SDK to load
+    window.addEventListener('load', function() {
+      // Try both possible global names
+      if (typeof Vapi !== 'undefined') {
+        vapi = new Vapi('81905765-ce7d-48d2-a33d-73baf5e7b13c');
+      } else if (typeof vapiSDK !== 'undefined') {
+        vapi = vapiSDK.run({
+          apiKey: '81905765-ce7d-48d2-a33d-73baf5e7b13c',
+          assistant: 'a7a61969-4b86-47cc-b23f-346dab4fb7ec'
+        });
+      } else {
+        document.getElementById('status').innerText = '❌ SDK failed to load';
+        return;
+      }
+
+      document.getElementById('status').innerText = 'Ready';
+      document.getElementById('start-call').disabled = false;
+
+      document.getElementById('start-call').addEventListener('click', () => {
+        document.getElementById('status').innerText = '📞 Connecting...';
+        
+        vapi.start('a7a61969-4b86-47cc-b23f-346dab4fb7ec', {
+          variableValues: {
+            SR_NO: document.getElementById('sr_no').value,
+            NAME: document.getElementById('name').value,
+            PROJECT_NAME: document.getElementById('project').value,
+            SERVICES: document.getElementById('services').value
+          }
+        });
+        
+        document.getElementById('start-call').disabled = true;
+        document.getElementById('end-call').disabled = false;
+      });
+
+      document.getElementById('end-call').addEventListener('click', () => {
+        vapi.stop();
+      });
+
+      vapi.on('call-start', () => {
+        document.getElementById('status').innerText = '🟢 Connected - Talk now!';
+      });
+
+      vapi.on('call-end', () => {
+        document.getElementById('status').innerText = '🔴 Call ended';
+        document.getElementById('start-call').disabled = false;
+        document.getElementById('end-call').disabled = true;
+      });
+    });
+  </script>
+</body>
+</html>
