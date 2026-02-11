@@ -25,11 +25,11 @@
     window.addEventListener('load', function() {
       // Try both possible global names
       if (typeof Vapi !== 'undefined') {
-        vapi = new Vapi('81905765-ce7d-48d2-a33d-73baf5e7b13c');
+        vapi = new Vapi('');
       } else if (typeof vapiSDK !== 'undefined') {
         vapi = vapiSDK.run({
-          apiKey: '81905765-ce7d-48d2-a33d-73baf5e7b13c',
-          assistant: 'a7a61969-4b86-47cc-b23f-346dab4fb7ec'
+          apiKey: '',
+          assistant: ''
         });
       } else {
         document.getElementById('status').innerText = '❌ SDK failed to load';
